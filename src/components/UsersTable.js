@@ -1,7 +1,7 @@
 import UserRow from "./UserRow";
 import "./UsersTable.css";
 
-export default function({users, handleCheck, isHeaderChecked, isRowChecked, handleRowCheck, handleRowDelete, handleUpdateRowData, currentPage}) {
+export default function({users, handleSelectAll, isHeaderChecked, isRowChecked, handleRowCheck, handleRowDelete, handleUpdateRowData, currentPage}) {
 	const rows = [];
 
 	users.forEach(user => {
@@ -23,7 +23,7 @@ export default function({users, handleCheck, isHeaderChecked, isRowChecked, hand
 				<tr>
 					<th>
 						<label>
-							<input type="checkbox" checked={isHeaderChecked[currentPage]} onChange={(ev) => handleCheck(ev, currentPage)} />
+							<input type="checkbox" checked={isHeaderChecked[currentPage] || false} onChange={(ev) => handleSelectAll(ev, currentPage)} />
 						</label>
 					</th>
 					<th>Name</th>

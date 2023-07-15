@@ -28,7 +28,7 @@ export default function UserRow({user, isRowChecked, handleRowCheck, handleRowDe
 					<input 
 						type="checkbox"
 						checked={isRowChecked[user.id] || false} 
-						onChange={() => handleRowCheck(user.id)} 
+						onChange={(ev) => handleRowCheck(ev, user.id)} 
 					/>
 				</label>
 			</td>

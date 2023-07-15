@@ -22,7 +22,6 @@ export default function FilterableUsersTable() {
 			setUsers(apiUsers);
 			setFilteredUsers(apiUsers.slice(0,10))
 			setTotalUsers(apiUsers.length);
-			// console.log(apiUsers);
 		}
 		catch(err){
 			alert(err.response.data);
@@ -52,7 +51,7 @@ export default function FilterableUsersTable() {
 		setCurrentPage(1);
 	}
 
-	const handleCheck = (ev, pageNum) => {
+	const handleSelectAll = (ev, pageNum) => {
 		setIsHeaderChecked((prevHeader) => ({
 			...prevHeader,
 			[pageNum]: ev.target.checked
@@ -64,11 +63,12 @@ export default function FilterableUsersTable() {
 		setIsRowChecked(rowCheckBoxStatus);
 	}
 
-	const handleRowCheck = (userId) => {
+	const handleRowCheck = (ev, userId) => {
 		setIsRowChecked((prevCheck) => ({
 			...prevCheck,
-			[userId]: !prevCheck[userId]
+			[userId]: ev.target.checked
 		}))
+		handlePageSelectAll(ev, userId);
 	}
 
 	const handleRowDelete = (userId) => {
@@ -78,16 +78,13 @@ export default function FilterableUsersTable() {
 		setTotalUsers(updatedUsers.length);
 		let updatedPage = currentPage;
 		// if we delete rows in last page, then we have to update current page to its before page.
-		if(currentPage > Math.ceil(updatedUsers.length/config.itemsPerPage)) {
+		if(currentPage > Math.ceil(updatedUsers.length/itemsPerPage)) {
 			updatedPage = currentPage - 1
 		}
+		clearCheckonPageChange(currentPage);
 		setCurrentPage(updatedPage);
 		const [firstIdx, lastIdx] = getPageIndexes(updatedPage);
 		setFilteredUsers(updatedUsers.slice(firstIdx, lastIdx));
-		setIsHeaderChecked((prevHeader) => ({
-			...prevHeader,
-			[currentPage]: false
-		}))
 	}
 
 	const getPageIndexes = (pageNum) => {
@@ -126,6 +123,40 @@ export default function FilterableUsersTable() {
 			matchedUsers = getFilteredUsers(users, searchText)
 		}
 		setFilteredUsers(matchedUsers.slice(firstIdx, lastIdx));
+		clearCheckonPageChange(currentPage);
+	}
+
+	const clearCheckonPageChange = (pageNum) => {
+		updateSelectAll(pageNum, false);
+		const rowCheckBoxStatus = {}
+		for(let user of filteredUsers)
+			rowCheckBoxStatus[user.id] = false
+		
+		setIsRowChecked(rowCheckBoxStatus);
+	}
+
+	// Handle select All button based on the status of each check button in table row
+	const handlePageSelectAll = (ev, userId) => {
+		const rowChecks = new Array();
+		for(const check in isRowChecked){
+			if(userId === check){
+				rowChecks.push(ev.target.checked)
+			} else {
+				rowChecks.push(isRowChecked[check])
+			}
+		}
+		if(rowChecks.includes(false)){
+			updateSelectAll(currentPage, false);
+		} else {
+			updateSelectAll(currentPage, true);
+		}
+	}
+
+	const updateSelectAll = (pageNum, status) => {
+		setIsHeaderChecked((prevHeader) => ({
+			...prevHeader,
+			[pageNum]: status
+		}))
 	}
 
 	return (
@@ -133,7 +164,7 @@ export default function FilterableUsersTable() {
 			<input type="text" name="search" className="search-box" placeholder="Search by name, email or role" onChange={handleInput} />
 			<UsersTable
 				users={filteredUsers}
-				handleCheck={handleCheck}
+				handleSelectAll={handleSelectAll}
 				isHeaderChecked={isHeaderChecked}
 				isRowChecked={isRowChecked} 
 				handleRowCheck={handleRowCheck}
