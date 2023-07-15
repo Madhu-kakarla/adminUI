@@ -1,0 +1,53 @@
+.table-footer {
+  display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 1rem 0rem;
+}
+
+.delete-button {
+	background-color: red;
+	color: #fff;
+	border-radius: 1rem;
+	border-color: red;
+	border-style: solid;
+	padding: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.pagination button {
+	background-color: #5f5ff8;
+	border-color: #5f5ff8;
+	color: #fff;
+	border-radius: 50%;
+	border-style: solid;
+	margin: 0 0.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.pagination button:disabled {
+	background-color: gainsboro;
+	border-color: gainsboro;
+	border-style: solid;
+	color: #a9a9a9;
+	cursor: not-allowed;
+}
+.pagination ul {
+	display: inline-flex;
+	margin-block-start: 0;
+	padding-inline-start: 0.5rem;
+}
+
+.pagination ul li {
+	list-style-type: none;
+	float: left;
+}
+
+button.active{
+	background-color: #fff;
+	color: #5f5ff8;
+}
